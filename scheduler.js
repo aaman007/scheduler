@@ -14,7 +14,6 @@ import schedule from "node-schedule";
 └───────────────────────── second (0 - 59, OPTIONAL)
  */
 
-
 // Every X second
 const secondlyJob = schedule.scheduleJob("*/5 * * * * *", (fireDate) => {
     console.log("FireDate: " + fireDate + " ActualDate: " + new Date());
@@ -37,10 +36,9 @@ const specificDateJob = schedule.scheduleJob(endOfTheWorld, (fireDate) => {
     console.log("----------------\n");
 });
 
-
 // Data Binding for future
 let name = "Amanur Rahman";
-const dataBindedJob = schedule.scheduleJob("*/5 * * * * *", function(name, fireDate) {
+const dataBindedJob = schedule.scheduleJob("*/5 * * * * *", function (name, fireDate) {
     console.log("FireDate: " + fireDate + " ActualDate: " + new Date());
     console.log("Scheduled job for every 5 second with binded data from past");
     console.log("Data name = " + name);
@@ -48,14 +46,12 @@ const dataBindedJob = schedule.scheduleJob("*/5 * * * * *", function(name, fireD
 }.bind(null, name));
 name = "Aaman Rahman";
 
-
 // Recurrence Rule
 const rule1 = new schedule.RecurrenceRule();
 rule1.minute = 16;
 const every16MinuteOfHour = schedule.scheduleJob(rule1, () => {
     console.log("Hey, its 16 minute of current hour");
 });
-
 
 // Recurrence Rule extension
 const rule2 = new schedule.RecurrenceRule();
@@ -76,49 +72,44 @@ RecurrenceRule properties
     tz
  */
 
-
 // Object Literal Syntax
-const specifiedJob = schedule.scheduleJob({hour: 0, minute: 26, dayOfWeek: 6}, function(){
-    console.log('Time for tea!');
+const specifiedJob = schedule.scheduleJob({ hour: 0, minute: 26, dayOfWeek: 6 }, function (){
+    console.log("Time for tea!");
 });
-
 
 // With StartTime and Every
 const startTime = new Date(Date.now());
 const endTime = new Date(startTime.getTime() + 5000);
-const job = schedule.scheduleJob({ start: startTime, end: endTime, rule: '*/1 * * * * *' }, function(){
-  console.log('Time for tea for every 1 second in a window of 5 seconds! (non-recurring)');
+const job = schedule.scheduleJob({ start: startTime, end: endTime, rule: "*/1 * * * * *" }, function (){
+    console.log("Time for tea for every 1 second in a window of 5 seconds! (non-recurring)");
 });
-
 
 // Graceful Shutdown
 const shutdowner = schedule.scheduleJob("*/2 * * * * *", () => {
-    for (let i=0;i<1000000000;i++);
+    for (let i = 0; i < 1000000000; i += 1);
     console.log("Run every 2 second");
 })
-.on("scheduled", () => {
-    console.log("Job Scheduled");
-})
-.on("success", () => {
-    console.log("Successful!!\n");
-})
-.on("canceled", () => {
-    console.log("Canceled!!\n");
-});
+    .on("scheduled", () => {
+        console.log("Job Scheduled");
+    })
+    .on("success", () => {
+        console.log("Successful!!\n");
+    })
+    .on("canceled", () => {
+        console.log("Canceled!!\n");
+    });
 
-process.on('SIGINT', () => {
+process.on("SIGINT", () => {
     console.log("Process interrupted. Graceful shutdown in progress");
-
     schedule.gracefulShutdown()
-    .then(() => process.exit(0));
+        .then(() => process.exit(0));
 });
-
 
 // Canceling jobs
-const gonnaCancel = schedule.scheduleJob('*/2 * * * * *', () => {
+const gonnaCancel = schedule.scheduleJob("*/2 * * * * *", () => {
     console.log("Job every 2 second, gonna be canceled after 10 seconds");
 })
-.on('canceled', () => {
-    console.log("I am canceled");
-});
+    .on("canceled", () => {
+        console.log("I am canceled");
+    });
 setTimeout(() => gonnaCancel.cancel(), 10000);
